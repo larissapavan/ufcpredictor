@@ -51,7 +51,7 @@ export function Header() {
                 <Activity className="h-3.5 w-3.5" />
                 <p className="broadcast-label text-[10px]">Matchup analytics</p>
               </div>
-              <p className="theme-text mt-0.5 truncate text-base font-bold uppercase tracking-[0.04em] sm:text-lg">
+              <p className="data-value theme-text mt-0.5 truncate text-lg leading-none tracking-[0.03em] sm:text-xl">
                 UFC Predictor
               </p>
             </div>
@@ -72,7 +72,7 @@ export function Header() {
                   className={({ isActive }) =>
                     [
                       'rounded-full px-2.5 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition',
-                      isActive ? 'bg-[#FFFFFF] text-[#050505] shadow-sm' : 'text-[#999999] hover:bg-white/7 hover:text-white',
+                      isActive ? 'nav-link-active' : 'text-[#999999] hover:bg-white/7 hover:text-white',
                     ].join(' ')
                   }
                 >

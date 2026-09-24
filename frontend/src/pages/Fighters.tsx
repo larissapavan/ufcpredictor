@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Award,
@@ -614,7 +615,15 @@ function FighterProfileModal({ name, onClose }: { name: string; onClose: () => v
       })
       .catch((requestError) => {
         console.error(requestError)
-        if (!cancelled) setError('Unable to load performance history.')
+        if (cancelled) return
+        const status = axios.isAxiosError(requestError) ? requestError.response?.status : undefined
+        if (status === 404) {
+          setError('No performance history found for this fighter.')
+        } else if (status) {
+          setError(`Unable to load performance history (server returned ${status}).`)
+        } else {
+          setError('Unable to load performance history. Check your connection and try again.')
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false)

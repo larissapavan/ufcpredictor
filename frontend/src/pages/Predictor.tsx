@@ -101,7 +101,7 @@ export function Predictor() {
 
       <section className="grid gap-3 xl:grid-cols-[1.48fr_0.52fr]">
         <div className="space-y-2.5">
-          <div className="flex flex-col gap-2 rounded-[18px] border border-white/8 bg-white/[0.035] p-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="surface-card flex flex-col gap-2 rounded-[18px] p-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="broadcast-label text-[11px] text-[#999999]">Matchup controls</p>
               <h2 className="mt-0.5 text-xl font-bold uppercase tracking-[0.03em] text-[#FFFFFF]">
@@ -142,8 +142,8 @@ export function Predictor() {
               </FighterCard>
 
               <div className="flex flex-col items-center justify-center gap-1.5 self-center">
-                <div className="rounded-full border border-[#E81B23]/25 bg-[#E81B23]/10 px-2.5 py-1.5 text-xl font-bold uppercase tracking-[0.12em] text-[#E81B23] shadow-[0_0_18px_rgba(232,27,35,0.16)]">
-                  VS
+                <div className="vs-medallion">
+                  <span>VS</span>
                 </div>
                 <div className="w-full rounded-xl border border-white/8 bg-white/[0.035] px-3 py-2 text-center lg:hidden">
                   <p className="broadcast-label text-[10px] text-[#999999]">Quick read</p>

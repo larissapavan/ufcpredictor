@@ -146,7 +146,7 @@ export function FighterSelect({
       <button
         type="button"
         onClick={openSearch}
-        className={`soft-input flex min-h-[54px] w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition duration-200 hover:border-white/16 hover:bg-white/[0.075] ${
+        className={`${corner === 'blue' ? 'soft-input-blue' : 'soft-input'} flex min-h-[54px] w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition duration-200 hover:border-white/16 hover:bg-white/[0.075] ${
           selectedFighter ? `ring-1 ${styles.border}` : ''
         }`}
       >
@@ -164,7 +164,7 @@ export function FighterSelect({
           </span>
         </span>
         {selectedFighter ? (
-          <Check className="h-4 w-4 shrink-0 text-[#E81B23]" />
+          <Check className={`h-4 w-4 shrink-0 ${styles.accent}`} />
         ) : (
           <ChevronDown className="h-4 w-4 shrink-0 text-[#999999]" />
         )}
@@ -184,7 +184,7 @@ export function FighterSelect({
             }}
           >
             <motion.section
-              className="surface-card flex h-[min(720px,calc(100vh-1.5rem))] w-full max-w-[760px] flex-col overflow-hidden rounded-[20px] border-white/14 sm:h-[min(760px,calc(100vh-2.5rem))] sm:rounded-[24px]"
+              className={`surface-card flex h-[min(720px,calc(100vh-1.5rem))] w-full max-w-[760px] flex-col overflow-hidden rounded-[20px] border-white/14 sm:h-[min(760px,calc(100vh-2.5rem))] sm:rounded-[24px] ${corner === 'blue' ? 'picker-blue' : ''}`}
               initial={{ opacity: 0, y: 18, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.98 }}
@@ -212,8 +212,8 @@ export function FighterSelect({
               </div>
 
               <div className="shrink-0 border-b border-[var(--line-soft)] px-4 py-3 sm:px-5">
-                <div className="soft-input flex items-center gap-3 rounded-2xl px-4 py-3">
-                  <Search className="h-4 w-4 shrink-0 text-[#E81B23]" />
+                <div className={`${corner === 'blue' ? 'soft-input-blue' : 'soft-input'} flex items-center gap-3 rounded-2xl px-4 py-3`}>
+                  <Search className={`h-4 w-4 shrink-0 ${styles.accent}`} />
                   <input
                     ref={searchRef}
                     role="combobox"
@@ -241,7 +241,7 @@ export function FighterSelect({
                   </span>
                 </div>
                 {selectedFighter ? (
-                  <span className="rounded-full border border-[#E81B23]/20 bg-[#E81B23]/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#E81B23]">
+                  <span className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${styles.border} ${corner === 'blue' ? 'bg-[#2F5FA8]/10' : 'bg-[#E81B23]/10'} ${styles.accent}`}>
                     Selected: {selectedFighter.name}
                   </span>
                 ) : null}
@@ -273,7 +273,7 @@ export function FighterSelect({
                           onClick={() => selectFighter(fighter)}
                           className={`selector-option group grid w-full grid-cols-[56px_1fr] gap-3 rounded-2xl border px-3 py-3 text-left transition duration-150 sm:grid-cols-[64px_1fr_auto] ${
                             isActive ? 'selector-option-active' : ''
-                          } ${isSelected ? 'ring-1 ring-[#E81B23]/45' : ''} ${isDisabled ? 'cursor-not-allowed opacity-45' : ''}`}
+                          } ${isSelected ? (corner === 'blue' ? 'ring-1 ring-[#2F5FA8]/45' : 'ring-1 ring-[#E81B23]/45') : ''} ${isDisabled ? 'cursor-not-allowed opacity-45' : ''}`}
                         >
                           <PickerAvatar
                             fighter={fighter}
@@ -287,7 +287,7 @@ export function FighterSelect({
                                 {fighter.name}
                               </span>
                               {isSelected ? (
-                                <span className="rounded-full border border-[#E81B23]/25 bg-[#E81B23]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#E81B23]">
+                                <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${styles.border} ${corner === 'blue' ? 'bg-[#2F5FA8]/10' : 'bg-[#E81B23]/10'} ${styles.accent}`}>
                                   Selected
                                 </span>
                               ) : null}
@@ -298,7 +298,11 @@ export function FighterSelect({
                             <span className="theme-muted mt-2 flex flex-wrap gap-2 text-xs">
                               <span className="selector-chip">Record: {formatRecord(fighter)}</span>
                               <span className="selector-chip">{fighter.stance || 'Style unavailable'}</span>
-                              {ranking ? <span className="rounded-full border border-[#E81B23]/20 bg-[#E81B23]/10 px-2.5 py-1 text-[#E81B23]">{ranking}</span> : null}
+                              {ranking ? (
+                                <span className={`rounded-full border px-2.5 py-1 ${styles.border} ${corner === 'blue' ? 'bg-[#2F5FA8]/10' : 'bg-[#E81B23]/10'} ${styles.accent}`}>
+                                  {ranking}
+                                </span>
+                              ) : null}
                             </span>
                           </span>
                           <span className="hidden items-center justify-end sm:flex">
@@ -308,7 +312,7 @@ export function FighterSelect({
                                 Other corner
                               </span>
                             ) : isSelected ? (
-                              <Check className="h-5 w-5 text-[#E81B23]" />
+                              <Check className={`h-5 w-5 ${styles.accent}`} />
                             ) : (
                               <ChevronDown className="theme-muted h-4 w-4 -rotate-90 transition group-hover:text-[var(--text-main)]" />
                             )}
@@ -370,7 +374,9 @@ function PickerAvatar({
         />
       ) : null}
       {fighter && (!imgUrl || !loaded || failed) ? (
-        <span className="text-lg font-bold uppercase text-[#E81B23]">{getInitials(fighter.name)}</span>
+        <span className={`text-lg font-bold uppercase ${corner === 'red' ? 'text-[#FF6B6B]' : 'text-[#8FB3E8]'}`}>
+          {getInitials(fighter.name)}
+        </span>
       ) : null}
       {!fighter ? (
         <UserRound className={`${large ? 'h-6 w-6' : 'h-5 w-5'} text-[#999999]`} />

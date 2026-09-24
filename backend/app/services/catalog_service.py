@@ -3,17 +3,20 @@ from __future__ import annotations
 import logging
 import math
 import re
+from pathlib import Path
 
 import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-from src.ufc_predictor.config import RAW_DATA_DIR
+from src.ufc_predictor.config import BASE_DIR, RAW_DATA_DIR
 
 
 FIGHTERS_SOURCE_PATH = RAW_DATA_DIR / "fighters.csv"
 FIGHTS_SOURCE_PATH = RAW_DATA_DIR / "fights.csv"
 CAREER_STATS_SOURCE_PATH = RAW_DATA_DIR / "fighter_career_stats.csv"
+HISTORICAL_PHOTOS_SOURCE_PATH = BASE_DIR / "lutadores_historicos.csv"
+HISTORICAL_PHOTOS_URL_PREFIX = "/fighter-photos/"
 
 VALID_STANCES = {"Orthodox", "Southpaw", "Switch", "Open Stance", "Unknown"}
 
@@ -61,12 +64,34 @@ def _build_catalog() -> pd.DataFrame:
     catalog["rank_signal"] = catalog["belt"].map(lambda value: "Champion" if value else "Contender")
 
     catalog["ranking"] = pd.NA
-    catalog["image_url"] = pd.NA
+
+    historical_photos = _load_historical_photos()
+    catalog = catalog.merge(historical_photos, on="profile_key", how="left")
+    catalog["image_url"] = catalog["historical_image_url"]
+    catalog = catalog.drop(columns=["historical_image_url"])
 
     return catalog.sort_values("name").drop_duplicates(subset=["profile_key"], keep="last").reset_index(drop=True)
 
 
 CAREER_STATS_COLUMNS = ["fighter_url", "age", "sig_str_acc", "takedown_acc", "wins", "losses", "draws"]
+
+
+def _load_historical_photos() -> pd.DataFrame:
+    """Local headshots recovered for fighters missing from the live Octagon API (retired/historical roster)."""
+    empty = pd.DataFrame(columns=["profile_key", "historical_image_url"])
+    if not HISTORICAL_PHOTOS_SOURCE_PATH.exists():
+        return empty
+
+    photos_df = pd.read_csv(HISTORICAL_PHOTOS_SOURCE_PATH)
+    photos_df = photos_df[photos_df["local_path"].astype(str).str.strip().ne("")].copy()
+    if photos_df.empty:
+        return empty
+
+    photos_df["profile_key"] = photos_df["name"].apply(_normalize_name)
+    photos_df["historical_image_url"] = photos_df["local_path"].apply(
+        lambda path: HISTORICAL_PHOTOS_URL_PREFIX + Path(str(path)).name
+    )
+    return photos_df[["profile_key", "historical_image_url"]].drop_duplicates(subset=["profile_key"])
 
 
 def _load_career_stats() -> pd.DataFrame:
@@ -137,7 +162,7 @@ _catalog_cache: dict = {"signature": None, "data": None}
 
 
 def _source_signature() -> tuple:
-    paths = [FIGHTERS_SOURCE_PATH, FIGHTS_SOURCE_PATH, CAREER_STATS_SOURCE_PATH]
+    paths = [FIGHTERS_SOURCE_PATH, FIGHTS_SOURCE_PATH, CAREER_STATS_SOURCE_PATH, HISTORICAL_PHOTOS_SOURCE_PATH]
     return tuple(path.stat().st_mtime_ns if path.exists() else None for path in paths)
 
 

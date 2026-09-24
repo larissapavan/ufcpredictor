@@ -13,13 +13,13 @@ interface FighterCardProps {
 
 const accentStyles = {
   red: {
-    line: 'bg-[#E81B23]',
-    badge: 'border-[#E81B23]/24 bg-[#E81B23]/10 text-[#FF6B6B]',
+    line: 'corner-flag corner-flag--red',
+    badge: 'border-[#E81B23]/30 bg-[#E81B23]/10 text-[#FF6B6B]',
     text: 'text-[#FF6B6B]',
   },
   blue: {
-    line: 'bg-[#2F5FA8]',
-    badge: 'border-[#2F5FA8]/24 bg-[#2F5FA8]/10 text-[#8FB3E8]',
+    line: 'corner-flag corner-flag--blue',
+    badge: 'border-[#2F5FA8]/30 bg-[#2F5FA8]/10 text-[#8FB3E8]',
     text: 'text-[#8FB3E8]',
   },
 }
@@ -45,7 +45,7 @@ export function FighterCard({ title, accent, fighter, children }: FighterCardPro
 
   return (
     <article className="surface-card group overflow-visible rounded-[22px] transition duration-300 hover:-translate-y-0.5 hover:border-white/16">
-      <div className={`h-1 w-full ${styles.line}`} />
+      <div className={styles.line} />
       <div className="p-3 sm:p-4">
         <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex min-w-0 gap-3">
@@ -67,17 +67,17 @@ export function FighterCard({ title, accent, fighter, children }: FighterCardPro
 
         {fighter ? (
           <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-[#FFFFFF] min-[430px]:grid-cols-3">
-            <Stat label="Age" value={fighter.age ? `${fighter.age.toFixed(1)} y` : '—'} />
-            <Stat label="Height" value={fighter.height_cm ? `${fighter.height_cm.toFixed(0)} cm` : '—'} />
-            <Stat label="Weight" value={fighter.weight_lbs ? `${fighter.weight_lbs.toFixed(0)} lbs` : '—'} />
-            <Stat label="Reach" value={fighter.reach_cm ? `${fighter.reach_cm.toFixed(0)} cm` : '—'} />
-            <Stat label="Record" value={record ?? '—'} />
-            <Stat label="Win rate" value={formatPercent(fighter.win_rate)} />
-            <Stat label="Striking" value={formatPercent(fighter.sig_str_acc)} />
-            <Stat label="Takedowns" value={formatPercent(fighter.takedown_acc)} />
-            <Stat label="Style" value={fighter.stance || 'Unknown'} />
-            <Stat label="Bouts" value={fighter.total_fights ?? '—'} />
-            <Stat label="Rank signal" value={fighter.rank_signal ?? (fighter.belt ? 'Champion' : '—')} />
+            <Stat accent={accent} label="Age" value={fighter.age ? `${fighter.age.toFixed(1)} y` : '—'} />
+            <Stat accent={accent} label="Height" value={fighter.height_cm ? `${fighter.height_cm.toFixed(0)} cm` : '—'} />
+            <Stat accent={accent} label="Weight" value={fighter.weight_lbs ? `${fighter.weight_lbs.toFixed(0)} lbs` : '—'} />
+            <Stat accent={accent} label="Reach" value={fighter.reach_cm ? `${fighter.reach_cm.toFixed(0)} cm` : '—'} />
+            <Stat accent={accent} label="Record" value={record ?? '—'} />
+            <Stat accent={accent} label="Win rate" value={formatPercent(fighter.win_rate)} />
+            <Stat accent={accent} label="Striking" value={formatPercent(fighter.sig_str_acc)} />
+            <Stat accent={accent} label="Takedowns" value={formatPercent(fighter.takedown_acc)} />
+            <Stat accent={accent} label="Style" value={fighter.stance || 'Unknown'} />
+            <Stat accent={accent} label="Bouts" value={fighter.total_fights ?? '—'} />
+            <Stat accent={accent} label="Rank signal" value={fighter.rank_signal ?? (fighter.belt ? 'Champion' : '—')} />
           </div>
         ) : (
           <div className="theme-muted mt-3 flex items-center gap-3 rounded-2xl border border-dashed border-[var(--line-soft)] bg-[var(--surface-3)] px-3 py-4 text-left text-sm">
@@ -128,7 +128,9 @@ function CornerPortrait({
         />
       ) : null}
       {fighter && (!showImage || !loaded) ? (
-        <span className="text-xl font-bold uppercase text-[#E81B23]">{getInitials(fighter.name)}</span>
+        <span className={`text-xl font-bold uppercase ${accent === 'red' ? 'text-[#FF6B6B]' : 'text-[#8FB3E8]'}`}>
+          {getInitials(fighter.name)}
+        </span>
       ) : null}
       {!fighter ? (
         <UserRound className="h-6 w-6 text-[var(--text-muted)]" />
@@ -137,9 +139,9 @@ function CornerPortrait({
   )
 }
 
-function Stat({ label, value }: { label: string; value: React.ReactNode }) {
+function Stat({ label, value, accent }: { label: string; value: React.ReactNode; accent: 'red' | 'blue' }) {
   return (
-    <div className="metric-tile min-h-[56px] rounded-xl px-2.5 py-2">
+    <div className={`metric-tile min-h-[56px] rounded-xl px-2.5 py-2 ${accent === 'blue' ? 'metric-tile--blue' : ''}`}>
       <p className="theme-muted broadcast-label text-[9px]">{label}</p>
       <p className="theme-text mt-1 truncate text-sm font-semibold">{value}</p>
     </div>
